@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-900 text-white antialiased;
+  }
+}
+
+@layer components {
+  .synth-control {
+    @apply bg-gray-800 rounded-lg p-4 border border-gray-700;
+  }
+  
+  .synth-slider {
+    @apply w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer;
+  }
+  
+  .synth-slider::-webkit-slider-thumb {
+    @apply appearance-none w-4 h-4 bg-synth-purple rounded-full cursor-pointer;
+  }
+  
+  .synth-button {
+    @apply bg-synth-purple hover:bg-synth-pink text-white px-4 py-2 rounded-lg transition-colors;
+  }
+  
+  .visualizer {
+    @apply bg-gray-800 rounded-lg border border-gray-700;
+  }
+}
