@@ -13,7 +13,8 @@ const Visualizer: React.FC<VisualizerProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>(0);
-  const { showWaveform, showFrequency } = useSynthStore((state) => state.visualization);
+  const showWaveform = useSynthStore((state) => state.visualization.showWaveform);
+  const showFrequency = useSynthStore((state) => state.visualization.showFrequency);
   const { getWaveformData, getFrequencyData } = useAudioEngine();
 
   const renderFrame = useCallback(() => {

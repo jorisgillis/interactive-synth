@@ -6,7 +6,7 @@ import { getFrequencyFromKey } from '../hooks/useKeyboard';
 const Keyboard: React.FC = () => {
   const [activeKeys, setActiveKeys] = useState<Set<string>>(new Set());
   const { start, stop, setFrequency } = useAudioEngine();
-  const { setIsPlaying } = useSynthStore();
+  const setIsPlaying = useSynthStore((state) => state.setIsPlaying);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -29,7 +29,8 @@ const Keyboard: React.FC = () => {
         });
         
         // Only stop if no keys are pressed
-        if (activeKeys.size === 1) {
+        // Use the updated activeKeys by checking the new set
+        if (new Set(activeKeys).delete(e.key).size === 0) {
           stop();
           setIsPlaying(false);
         }

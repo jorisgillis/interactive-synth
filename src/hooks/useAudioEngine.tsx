@@ -1,45 +1,16 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useCallback, useContext } from 'react';
+import { AudioEngineContext } from './AudioEngineProvider';
 import type { WaveformType } from '../types';
 
+// Custom hook to use the audio engine
 export const useAudioEngine = () => {
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const oscillatorRef = useRef<OscillatorNode | null>(null);
-  const filterRef = useRef<BiquadFilterNode | null>(null);
-  const gainRef = useRef<GainNode | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-
-  // Initialize audio context and nodes
-  useEffect(() => {
-    const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-    
-    // Create analyser for visualization
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 2048;
-    
-    // Create filter
-    const filter = audioContext.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.value = 20000;
-    filter.Q.value = 0;
-    
-    // Create gain node
-    const gain = audioContext.createGain();
-    gain.gain.value = 0.5;
-    
-    audioContextRef.current = audioContext;
-    analyserRef.current = analyser;
-    filterRef.current = filter;
-    gainRef.current = gain;
-
-    return () => {
-      // Cleanup on unmount
-      if (oscillatorRef.current) {
-        oscillatorRef.current.stop();
-        oscillatorRef.current = null;
-      }
-      audioContext.close();
-    };
-  }, []);
+  const context = useContext(AudioEngineContext);
+  
+  if (!context) {
+    throw new Error('useAudioEngine must be used within an AudioEngineProvider');
+  }
+  
+  const { audioContextRef, oscillatorRef, filterRef, gainRef, analyserRef } = context;
 
   const start = useCallback((frequency: number) => {
     const audioContext = audioContextRef.current;
@@ -70,38 +41,38 @@ export const useAudioEngine = () => {
     // Start oscillator
     oscillator.start();
     oscillatorRef.current = oscillator;
-  }, []);
+  }, [audioContextRef, oscillatorRef, filterRef, analyserRef, gainRef]);
 
   const stop = useCallback(() => {
     if (oscillatorRef.current) {
       oscillatorRef.current.stop();
       oscillatorRef.current = null;
     }
-  }, []);
+  }, [oscillatorRef]);
 
   const setWaveform = useCallback((waveform: WaveformType) => {
     if (oscillatorRef.current) {
       oscillatorRef.current.type = waveform;
     }
-  }, []);
+  }, [oscillatorRef]);
 
   const setFrequency = useCallback((frequency: number) => {
     if (oscillatorRef.current) {
       oscillatorRef.current.frequency.value = frequency;
     }
-  }, []);
+  }, [oscillatorRef]);
 
   const setFilterCutoff = useCallback((cutoff: number) => {
     if (filterRef.current) {
       filterRef.current.frequency.value = cutoff;
     }
-  }, []);
+  }, [filterRef]);
 
   const setFilterResonance = useCallback((resonance: number) => {
     if (filterRef.current) {
       filterRef.current.Q.value = resonance;
     }
-  }, []);
+  }, [filterRef]);
 
   const setFilterEnabled = useCallback((enabled: boolean) => {
     const oscillator = oscillatorRef.current;
@@ -117,13 +88,13 @@ export const useAudioEngine = () => {
         oscillator.connect(analyser!);
       }
     }
-  }, []);
+  }, [oscillatorRef, filterRef, analyserRef]);
 
   const setVolume = useCallback((volume: number) => {
     if (gainRef.current) {
       gainRef.current.gain.value = volume;
     }
-  }, []);
+  }, [gainRef]);
 
   const getWaveformData = useCallback((): Uint8Array | null => {
     if (analyserRef.current) {
@@ -132,7 +103,7 @@ export const useAudioEngine = () => {
       return data;
     }
     return null;
-  }, []);
+  }, [analyserRef]);
 
   const getFrequencyData = useCallback((): Uint8Array | null => {
     if (analyserRef.current) {
@@ -141,7 +112,7 @@ export const useAudioEngine = () => {
       return data;
     }
     return null;
-  }, []);
+  }, [analyserRef]);
 
   return {
     start,

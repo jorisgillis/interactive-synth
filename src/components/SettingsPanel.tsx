@@ -2,19 +2,11 @@ import React from 'react';
 import { useSynthStore } from '../store/useSynthStore';
 
 const SettingsPanel: React.FC = () => {
-  const {
-    showTooltips,
-    visualization,
-    setShowTooltips,
-    setVisualization,
-    resetSettings,
-  } = useSynthStore((state) => ({
-    showTooltips: state.showTooltips,
-    visualization: state.visualization,
-    setShowTooltips: state.setShowTooltips,
-    setVisualization: state.setVisualization,
-    resetSettings: state.resetSettings,
-  }));
+  const showTooltips = useSynthStore((state) => state.showTooltips);
+  const visualization = useSynthStore((state) => state.visualization);
+  const setShowTooltips = useSynthStore((state) => state.setShowTooltips);
+  const setVisualization = useSynthStore((state) => state.setVisualization);
+  const resetSettings = useSynthStore((state) => state.resetSettings);
 
   const handleToggleTooltips = () => {
     setShowTooltips(!showTooltips);

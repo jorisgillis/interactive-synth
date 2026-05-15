@@ -11,45 +11,58 @@ import ExercisePanel from './components/ExercisePanel';
 import SettingsPanel from './components/SettingsPanel';
 
 const App: React.FC = () => {
-  const { settings } = useSynthStore((state) => ({
-    settings: state.settings,
-  }));
+  // Use individual selectors to avoid object reference changes
+  const waveform = useSynthStore((state) => state.settings.waveform);
+  const frequency = useSynthStore((state) => state.settings.frequency);
+  const filterCutoff = useSynthStore((state) => state.settings.filter.cutoff);
+  const filterResonance = useSynthStore((state) => state.settings.filter.resonance);
+  const filterEnabled = useSynthStore((state) => state.settings.filter.enabled);
+  const volume = useSynthStore((state) => state.settings.volume);
+  const isPlaying = useSynthStore((state) => state.settings.isPlaying);
 
   const { start, stop, setWaveform, setFrequency, setFilterCutoff, setFilterResonance, setFilterEnabled, setVolume } = useAudioEngine();
 
   // Sync store with audio engine
+  // Note: We omit the setter functions from dependencies as they are stable (useCallback with ref dependencies)
   useEffect(() => {
-    setWaveform(settings.waveform);
-  }, [settings.waveform, setWaveform]);
+    setWaveform(waveform);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [waveform]);
 
   useEffect(() => {
-    setFrequency(settings.frequency);
-  }, [settings.frequency, setFrequency]);
+    setFrequency(frequency);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frequency]);
 
   useEffect(() => {
-    setFilterCutoff(settings.filter.cutoff);
-  }, [settings.filter.cutoff, setFilterCutoff]);
+    setFilterCutoff(filterCutoff);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterCutoff]);
 
   useEffect(() => {
-    setFilterResonance(settings.filter.resonance);
-  }, [settings.filter.resonance, setFilterResonance]);
+    setFilterResonance(filterResonance);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterResonance]);
 
   useEffect(() => {
-    setFilterEnabled(settings.filter.enabled);
-  }, [settings.filter.enabled, setFilterEnabled]);
+    setFilterEnabled(filterEnabled);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterEnabled]);
 
   useEffect(() => {
-    setVolume(settings.volume);
-  }, [settings.volume, setVolume]);
+    setVolume(volume);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [volume]);
 
   // Handle playing state
   useEffect(() => {
-    if (settings.isPlaying) {
-      start(settings.frequency);
+    if (isPlaying) {
+      start(frequency);
     } else {
       stop();
     }
-  }, [settings.isPlaying, settings.frequency, start, stop]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, frequency]);
 
   // Cleanup on unmount
   useEffect(() => {

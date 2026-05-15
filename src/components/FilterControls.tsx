@@ -2,21 +2,12 @@ import React from 'react';
 import { useSynthStore } from '../store/useSynthStore';
 
 const FilterControls: React.FC = () => {
-  const {
-    filterCutoff,
-    filterResonance,
-    filterEnabled,
-    setFilterCutoff,
-    setFilterResonance,
-    setFilterEnabled,
-  } = useSynthStore((state) => ({
-    filterCutoff: state.settings.filter.cutoff,
-    filterResonance: state.settings.filter.resonance,
-    filterEnabled: state.settings.filter.enabled,
-    setFilterCutoff: state.setFilterCutoff,
-    setFilterResonance: state.setFilterResonance,
-    setFilterEnabled: state.setFilterEnabled,
-  }));
+  const filterCutoff = useSynthStore((state) => state.settings.filter.cutoff);
+  const filterResonance = useSynthStore((state) => state.settings.filter.resonance);
+  const filterEnabled = useSynthStore((state) => state.settings.filter.enabled);
+  const setFilterCutoff = useSynthStore((state) => state.setFilterCutoff);
+  const setFilterResonance = useSynthStore((state) => state.setFilterResonance);
+  const setFilterEnabled = useSynthStore((state) => state.setFilterEnabled);
 
   const handleCutoffChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterCutoff(Number(e.target.value));

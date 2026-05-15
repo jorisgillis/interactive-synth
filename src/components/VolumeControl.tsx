@@ -2,10 +2,8 @@ import React from 'react';
 import { useSynthStore } from '../store/useSynthStore';
 
 const VolumeControl: React.FC = () => {
-  const { volume, setVolume } = useSynthStore((state) => ({
-    volume: state.settings.volume,
-    setVolume: state.setVolume,
-  }));
+  const volume = useSynthStore((state) => state.settings.volume);
+  const setVolume = useSynthStore((state) => state.setVolume);
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value));

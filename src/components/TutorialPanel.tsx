@@ -3,21 +3,12 @@ import { useSynthStore } from '../store/useSynthStore';
 import { tutorials } from '../data/tutorials';
 
 const TutorialPanel: React.FC = () => {
-  const {
-    currentTutorial,
-    currentTutorialStep,
-    setCurrentTutorial,
-    nextTutorialStep,
-    prevTutorialStep,
-    completeTutorial,
-  } = useSynthStore((state) => ({
-    currentTutorial: state.currentTutorial,
-    currentTutorialStep: state.currentTutorialStep,
-    setCurrentTutorial: state.setCurrentTutorial,
-    nextTutorialStep: state.nextTutorialStep,
-    prevTutorialStep: state.prevTutorialStep,
-    completeTutorial: state.completeTutorial,
-  }));
+  const currentTutorial = useSynthStore((state) => state.currentTutorial);
+  const currentTutorialStep = useSynthStore((state) => state.currentTutorialStep);
+  const setCurrentTutorial = useSynthStore((state) => state.setCurrentTutorial);
+  const nextTutorialStep = useSynthStore((state) => state.nextTutorialStep);
+  const prevTutorialStep = useSynthStore((state) => state.prevTutorialStep);
+  const completeTutorial = useSynthStore((state) => state.completeTutorial);
 
   const handleStartTutorial = (tutorialId: string) => {
     const tutorial = tutorials.find((t) => t.id === tutorialId);

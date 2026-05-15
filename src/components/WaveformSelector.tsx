@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSynthStore } from '../store/useSynthStore';
 import type { WaveformType } from '../types';
 
@@ -10,10 +10,12 @@ const WAVEFORMS: { id: WaveformType; name: string; description: string }[] = [
 ];
 
 const WaveformSelector: React.FC = () => {
-  const { waveform, setWaveform } = useSynthStore((state) => ({
-    waveform: state.settings.waveform,
-    setWaveform: state.setWaveform,
-  }));
+  const waveform = useSynthStore((state) => state.settings.waveform);
+  const setWaveform = useSynthStore((state) => state.setWaveform);
+
+  const handleWaveformChange = useCallback((waveform: WaveformType) => {
+    setWaveform(waveform);
+  }, [setWaveform]);
 
   return (
     <div className="synth-control">
@@ -22,7 +24,7 @@ const WaveformSelector: React.FC = () => {
         {WAVEFORMS.map((wave) => (
           <button
             key={wave.id}
-            onClick={() => setWaveform(wave.id)}
+            onClick={() => handleWaveformChange(wave.id)}
             className={`px-3 py-2 rounded-lg text-sm transition-all ${
               waveform === wave.id
                 ? 'bg-synth-purple text-white'

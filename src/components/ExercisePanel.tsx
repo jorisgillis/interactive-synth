@@ -3,17 +3,10 @@ import { useSynthStore } from '../store/useSynthStore';
 import { exercises } from '../data/exercises';
 
 const ExercisePanel: React.FC = () => {
-  const {
-    currentExercise,
-    setCurrentExercise,
-    completeExercise,
-    settings,
-  } = useSynthStore((state) => ({
-    currentExercise: state.currentExercise,
-    setCurrentExercise: state.setCurrentExercise,
-    completeExercise: state.completeExercise,
-    settings: state.settings,
-  }));
+  const currentExercise = useSynthStore((state) => state.currentExercise);
+  const setCurrentExercise = useSynthStore((state) => state.setCurrentExercise);
+  const completeExercise = useSynthStore((state) => state.completeExercise);
+  const settings = useSynthStore((state) => state.settings);
 
   const [attemptResult, setAttemptResult] = useState<'none' | 'success' | 'failure'>('none');
 
